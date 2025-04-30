@@ -67,6 +67,64 @@ fn main() {
        tokens.push(Token::EOF);
        tokens
     }
+
+    impl Parser{
+        fn new (tokens:Vec<Token>) -> Self{
+            Self{tokens,current:0}
+        }
+
+        fn parse(&mut self) -> Vec<Stmt>{
+            let mut statements = Vec::new();
+
+            while !self.at_end(){
+                statements.push(self.statement())
+            }
+
+            statements
+        }
+
+        fn statement(&self)-> Stmt{
+
+        }
+             
+        fn token_check(&self, kind:&Token) -> bool{
+            if self.at_end(){
+                return false;
+            }
+            &self.tokens[self.current] ==kind
+        }
+        
+        fn move_advance_token(&mut self) -> Token{
+            let token =self.tokens[self.current].clone();
+            self.current += 1;
+            token
+        }
+
+        fn consume(&mut self, kind:Token, msg:&str){
+             if self.token_check(&kind){
+                self.move_advance_token();
+             }else{
+                panic!("{}",msg);
+             }
+        }
+
+        fn at_end(&self)-> bool{
+            self.tokens[self.current] == Token::EOF
+    
+        }
+
+        fn match_token(&mut self, kinds: &[Token])->bool{
+               for kind in kinds{
+                if token_check(kind){
+                    self.move_advance_token();
+                    return true;
+                }
+               }
+               false
+        }
+    }
+
+  
 }
 
 
