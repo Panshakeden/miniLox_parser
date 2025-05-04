@@ -83,8 +83,24 @@ fn main() {
             statements
         }
 
-        fn statement(&self)-> Stmt{
+        fn statement(&mut self)-> Stmt{
+            if self.match_token(&[Token::Print]){
+                let expr= self.expression();
+                self.consume(Token::Semicolon, "; expected");
 
+                Stmt::Print(expr)
+            }else{
+                panic!("statement unknown");
+            }
+
+        }
+
+        fn expression(&mut self)->Expr{
+            if let Token::Number(value) = self.move_advance_token(){
+                Expr::Literals(value)
+            }else{
+                panic!("A number expected");
+            }
         }
              
         fn token_check(&self, kind:&Token) -> bool{
@@ -115,7 +131,7 @@ fn main() {
 
         fn match_token(&mut self, kinds: &[Token])->bool{
                for kind in kinds{
-                if token_check(kind){
+                if self.token_check(kind){
                     self.move_advance_token();
                     return true;
                 }
